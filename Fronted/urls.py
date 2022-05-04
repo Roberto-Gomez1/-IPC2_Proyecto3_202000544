@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from Fronted.views import saludo, despedida, VistaPrinciapl,textvaribles,curriculum,curriculumNew
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('Rango/', saludo),
+    path('despedida/', despedida),
+    path('Resumen_Fecha/', curriculum),
+    path('curriculumNew/', curriculumNew),
+    path('documentacion/', textvaribles),
+    path('Main/', VistaPrinciapl),
 ]
