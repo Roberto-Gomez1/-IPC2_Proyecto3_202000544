@@ -74,7 +74,7 @@ def LecturaDatos():
                         efe = re.findall(ser[x].alias,aux_mensaje)
                         for z in efe:
                             aux = str(z)
-                            #print(aux)
+                            print(aux)
                             if aux is False:
                                 print("prueba",z)
                             print('Servicio:',ser[x].servicio,'Alias:',ser[x].alias)
