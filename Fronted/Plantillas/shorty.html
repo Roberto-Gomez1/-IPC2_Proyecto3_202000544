@@ -70,33 +70,8 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="http://localhost:8000/Resumen_Fecha/">
-                <span>Resumen de clasificacion por fecha</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="http://localhost:8000/Rango/">
-                <span>Resumen por rango de fechas</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
-                <span>Reporte en PDF</span>
-              </a>
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="http://localhost:8000/shorty/"  target="_blank">
-                <span>Prueba de mensaje</span>
+              <a class="dropdown-item d-flex align-items-center" href="http://localhost:8000/Main/">
+                <span>Pagina Principal</span>
               </a>
             </li>
             <li>
@@ -105,40 +80,6 @@
 
           </ul>
         </li><!-- End Peticiones -->
-
-        <li class="nav-item dropdown pe-3"><!--Ayuda-->
-
-          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-              <i class="bi bi-info-circle text-primary"></i>
-            <span class="d-none d-md-block dropdown-toggle ps-2">Ayuda</span>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-         
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="http://localhost:8000/curriculumNew/"  target="_blank">
-                <span>visualizar información del estudiante</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li>
-              <a class="dropdown-item d-flex align-items-center"href="http://localhost:8000/documentacion/"  target="_blank">
-                <span>visualizar la documentación del programa</span>
-              </a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-          </ul>
-        </li><!-- End Ayuda -->
-
       </ul>
     </nav>
 
@@ -153,7 +94,7 @@
  
 
     <div class="pagetitle">
-      <h1>Pagina de Inicio</h1>
+      <h1>Pagina prueba mensaje</h1>
 
     </div><!-- End Page Title -->
 
@@ -171,13 +112,11 @@
               <button type="submit" class="btn btn-success rounded-pill" >Enviar</button>
             </a>
           </li>
-          
           <li class="nav-item dropdown">
             <a class="nav-link nav-icon">
               <button id="botonPDF" type="submit" class="btn btn-success rounded-pill"  >PDF</button>
             </a>
           </li>
-
           <li class="nav-item dropdown">
             <a class="nav-link nav-icon">
               <button type="button" class="btn btn-danger rounded-pill" id= "Limpiar" onclick="botonLimpiar()">Reset</button>
@@ -200,7 +139,7 @@
                 <div class="card" >
                   <div class="card-body">
                     <h5 class="card-title"></h5>
-                    <textarea   rows="20" style=" width: 100%;" name="api-info"  id= "Exditor_Entrada">{{data}}</textarea>
+                    <textarea   rows="20" style=" width: 100%;" name="api-info1"  id= "Exditor_Entrada">{{data}}</textarea>
                   
                   </div>
                 </div>
@@ -264,7 +203,7 @@
         e.preventDefault();
         console.log("Exito")
           
-          fetch("http://localhost:5000/eventsCleaner/", {
+          fetch("http://localhost:5000/shorty/eventsCleaner/", {
             method: "GET",
             headers: {
               "Content-Type": "text/plain",
@@ -304,14 +243,15 @@
 
       post_form.addEventListener("submit", (e) => {
         e.preventDefault();
-        fetch("http://localhost:5000/events/", {
+        fetch("http://127.0.0.1:5000/shorty/events/", {
           method: "POST",
           headers: {
             "Content-Type": "text/plain",
           },
-          body: post_form.elements["api-info"].value,
+          body: post_form.elements["api-info1"].value,
         }).then((res) => {
           if (res.ok) {
+            
             alert("Solicitud de autorizacion enviada")
             //recuperar()
             console.log("Enviado")
@@ -323,7 +263,7 @@
       function recuperar(){        
         console.log("Exito")
        
-        fetch("http://localhost:5000/events/", {
+        fetch("http://127.0.0.1:5000/shorty/events/", {
           method: "GET",
           headers: {
             "Content-Type": "text/plain",
@@ -331,6 +271,7 @@
         })
           .then((res) => {
             if (res.ok) {
+              
               return res.text();
             }
           })

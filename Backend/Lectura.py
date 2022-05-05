@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import unicodedata
 import re
-from objetos import palabras_b,vicio,Men,fech,men_empr,Nose,men_servi
+from objetos import palabras_b,vicio,Men,fech,men_empr,men_servi,corto
 prueba = []
 empre = []
 ser =[]
@@ -14,47 +14,14 @@ cantidad_empresa=[]
 cantidad_servicio=[]
 nose=[]
 apex=[]
-
-
-def LecturaMensaje():
-    try:
-        ruta = 'mensaje.xml' 
-        gestion = ET.parse(ruta)
-        root = gestion.getroot()
-        for mensaje in root.iter('mensaje'):
-            aux_mensaje = str(mensaje.text).lower()
-            print(aux_mensaje)
-            tipo_empresa = aux_mensaje.split('@')
-            tipo_empresa = tipo_empresa[1]
-            tipo_empresa = tipo_empresa.split(' ')
-            tipo_empresa = tipo_empresa[0]
-            tipo_empresa = tipo_empresa.split('.')
-            tipo_empresa = tipo_empresa[0]
-            lista_mensaje = aux_mensaje.split(':')
-            nombre = lista_mensaje[3]
-            nombre = nombre.split(' ')
-            nombre = nombre[1]
-            social = lista_mensaje[4]
-            social = social.split(' ')
-            social = social[1]
-            aux_mensaje = lista_mensaje[4]
-            aux_mensaje=elimina_tildes(aux_mensaje)
-            print(aux_mensaje)
-            fecha=Lecturafecha(str(mensaje.text))
-            fecha = fecha.replace(' ','')
-            print(fecha)
-            print(nombre)
-            print(social)
-            print(tipo_empresa)
-                #list_fecha.append(fecha)
-    except:
-        print("Error")
-
+ob_fecha=[]
+mensaje_corto=[]
 
 def LecturaDatos():
     try:
-        global apex
+        global apex,mensaje_corto
         global prueba
+        global ob_fecha
         global empre
         global ser
         global nose
@@ -158,6 +125,64 @@ def LecturaDatos():
     except:
         print("Error")
     
+def LecturaMensaje():
+    try:
+        ruta = 'mensaje.xml' 
+        gestion = ET.parse(ruta)
+        root = gestion.getroot()
+        for mensaje in root.iter('mensaje'):
+            aux_mensaje = str(mensaje.text).lower()
+            lista_mensaje = aux_mensaje.split(':')
+            nombre = lista_mensaje[3]
+            nombre = nombre.split(' ')
+            nombre = nombre[1]
+            social = lista_mensaje[4]
+            social = social.split(' ')
+            social = social[1]
+            aux_mensaje = lista_mensaje[4]
+            aux_mensaje=elimina_tildes(aux_mensaje)
+            for i in range(len(empre)):
+                hola = re.findall(empre[i],aux_mensaje)
+                for k in hola:
+                    tipo_empresa =empre[i]
+            print(aux_mensaje)
+            fecha=Lecturafecha(str(mensaje.text))
+            fecha = fecha.replace(' ','')
+            positivo = 0
+            negativo = 0
+            total=0
+            for x in range(len(ser)):
+                efe = re.findall(ser[x].alias,aux_mensaje)
+                for z in efe:
+                    tipo_servicio =ser[x].servicio
+                efe = re.findall(ser[x].servicio,aux_mensaje)
+                for z in efe:
+                    tipo_servicio =ser[x].servicio
+            for x in range(len(prueba)):
+                hola = re.findall(prueba[x].palabra,aux_mensaje) 
+                for k in hola:
+                    #print(k)
+                    total+=1
+                    if prueba[x].tipo == 'p':
+                        positivo += 1
+                    if prueba[x].tipo == 'n':
+                        negativo += 1 
+            sentimiento_positivo = str(int((positivo*100)/total))
+            sentimiento_negativo = str(int((negativo*100)/total))
+            if sentimiento_positivo<sentimiento_negativo:
+                estado = "negativo"
+            elif sentimiento_positivo>sentimiento_negativo:
+                estado = "positivo"
+            elif sentimiento_positivo == sentimiento_negativo:
+                estado = "neutro"
+        
+
+            mensaje_corto.append(corto(fecha,social,nombre,tipo_empresa,tipo_servicio,positivo,negativo,(sentimiento_positivo+'%'),(sentimiento_negativo+'%'),estado))
+            ob_fecha.append(fecha)
+        print(repr(mensaje_corto))
+    except:
+        print("Error")
+
 
 def data():
     for bb in list_fecha:
@@ -224,7 +249,41 @@ def data():
     print(repr(cantidad_empresa))
     print(repr(cantidad_mensaje))
 
+def ArchivoSalida2():
+    root = ET.Element("respuesta")
+    mensaje = ET.SubElement(root,"mensaje")
+    for i in mensaje_corto:
+        ET.SubElement(mensaje, "fecha").text = str(i.fecha)
+        ET.SubElement(mensaje, "fecha").text = str(i.red_social)
+        ET.SubElement(mensaje, "fecha").text = str(i.usuario)
+        empresaaa = ET.SubElement(mensaje,"empresas")
+        ET.SubElement(empresaaa,"empresa").attrib = {"nombre":i.empresa}
+        ET.SubElement(empresaaa,"servicio").text = str(i.servicio)
+        ET.SubElement(root,"palabras_positivas").text = str(i.t_positivo)
+        ET.SubElement(root,"palabras_negativas").text = str(i.t_negativo)
+        ET.SubElement(root,"sentimiento_positivo").text = str(i.s_positivo)
+        ET.SubElement(root,"sentimiento_negativo").text = str(i.s_positivo)
+        ET.SubElement(root,"sentimiento_analizado").text = str(i.s_analizado)
+    def Bonito(elemento, identificador='  '):
+        validar = [(0, elemento)]  
 
+        while validar:
+            level, elemento = validar.pop(0)
+            children = [(level + 1, child) for child in list(elemento)]
+            if children:
+                elemento.text = '\n' + identificador * (level+1)  
+            if validar:
+                elemento.tail = '\n' + identificador * validar[0][0]  
+            else:
+                elemento.tail = '\n' + identificador * (level-1)  
+            validar[0:0] = children 
+
+    Bonito(root)
+    archio = ET.ElementTree(root) 
+    archio.write("./corto.xml", encoding='UTF-8')
+    xml_str = ElementTree.tostring(root).decode()
+    return xml_str 
+        
 def ArchivoSalida():
     global ob_men, cantidad_mensaje, cantidad_empresa, cantidad_servicio
     root = ET.Element("lista_respuesta")
@@ -290,5 +349,8 @@ def Lecturafecha(fecha):
         
     except:
         return 'NoSeEncontro'
-
-LecturaMensaje()
+#LecturaDatos()
+#data()
+#ArchivoSalida()
+#LecturaMensaje()
+#ArchivoSalida2()

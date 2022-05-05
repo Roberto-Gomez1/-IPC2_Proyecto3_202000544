@@ -21,6 +21,24 @@ class vicio():
     def __repr__(self):
         return f'\n Servicio: {self.servicio} Alias: {self.alias}'
 
+
+class corto():
+    def __init__(self,fecha,red_social,usuario,empresa,servicio,t_positivo,t_negativo,s_positivo,s_negativo,s_analizado):
+        self.fecha =fecha
+        self.red_social = red_social
+        self.usuario = usuario
+        self.empresa = empresa
+        self.servicio = servicio
+        self.t_positivo = t_positivo
+        self.t_negativo = t_negativo
+        self.s_positivo = s_positivo
+        self.s_negativo = s_negativo
+        self.s_analizado = s_analizado
+
+
+    def __repr__(self):
+        return f'\n Fecha: {self.fecha} Red_Social: {self.red_social} Usuario: {self.usuario} Empresa: {self.empresa} Servicio {self.servicio} Palabras_positivas: {self.t_positivo} Palabras_negativas: {self.t_negativo} Sentimiento_Positivo {self.s_positivo} Sentimiento_Negaitvo {self.s_negativo} Sentimiento_Analizado {self.s_analizado}'
+
 class fech():
     def __init__(self,fecha,total,t_positivo,t_negativo,t_neutro):
         self.fecha =fecha

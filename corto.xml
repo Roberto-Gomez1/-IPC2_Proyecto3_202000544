@@ -1,0 +1,16 @@
+<respuesta>
+  <mensaje>
+    <fecha>01/04/2022</fecha>
+    <fecha>facebook</fecha>
+    <fecha>map0002@usac.edu</fecha>
+    <empresas>
+      <empresa nombre="usac" />
+      <servicio>parqueo</servicio>
+  </empresas>
+  </mensaje>
+  <palabras_positivas>0</palabras_positivas>
+  <palabras_negativas>2</palabras_negativas>
+  <sentimiento_positivo>0%</sentimiento_positivo>
+  <sentimiento_negativo>0%</sentimiento_negativo>
+  <sentimiento_analizado>negativo</sentimiento_analizado>
+</respuesta>

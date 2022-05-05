@@ -20,7 +20,9 @@ def curriculum(request):
     diccionario = {} 
     return render(request,"Resumen_Fecha.html",diccionario)
 
-
+def shorty(request):
+    diccionario ={}
+    return render(request,'shorty.html',diccionario)
 
 def curriculumNew(request):
     diccionario = {} 
