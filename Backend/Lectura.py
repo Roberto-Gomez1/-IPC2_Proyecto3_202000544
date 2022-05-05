@@ -14,6 +14,43 @@ cantidad_empresa=[]
 cantidad_servicio=[]
 nose=[]
 apex=[]
+
+
+def LecturaMensaje():
+    try:
+        ruta = 'mensaje.xml' 
+        gestion = ET.parse(ruta)
+        root = gestion.getroot()
+        for mensaje in root.iter('mensaje'):
+            aux_mensaje = str(mensaje.text).lower()
+            print(aux_mensaje)
+            tipo_empresa = aux_mensaje.split('@')
+            tipo_empresa = tipo_empresa[1]
+            tipo_empresa = tipo_empresa.split(' ')
+            tipo_empresa = tipo_empresa[0]
+            tipo_empresa = tipo_empresa.split('.')
+            tipo_empresa = tipo_empresa[0]
+            lista_mensaje = aux_mensaje.split(':')
+            nombre = lista_mensaje[3]
+            nombre = nombre.split(' ')
+            nombre = nombre[1]
+            social = lista_mensaje[4]
+            social = social.split(' ')
+            social = social[1]
+            aux_mensaje = lista_mensaje[4]
+            aux_mensaje=elimina_tildes(aux_mensaje)
+            print(aux_mensaje)
+            fecha=Lecturafecha(str(mensaje.text))
+            fecha = fecha.replace(' ','')
+            print(fecha)
+            print(nombre)
+            print(social)
+            print(tipo_empresa)
+                #list_fecha.append(fecha)
+    except:
+        print("Error")
+
+
 def LecturaDatos():
     try:
         global apex
@@ -130,7 +167,7 @@ def data():
     for bb in apex:
         if bb not in nose:
             nose.append(bb)
-    print(nose)
+    #print(nose)
     aaa = len(empre)
     aaa2=len(nose)
     for i in range(len(sinrepe)):
@@ -188,6 +225,60 @@ def data():
     print(repr(cantidad_mensaje))
 
 
+def ArchivoSalida():
+    global ob_men, cantidad_mensaje, cantidad_empresa, cantidad_servicio
+    root = ET.Element("lista_respuesta")
+    Respuesta = ET.SubElement(root,"respuesta")
+    for i in cantidad_mensaje:
+        ET.SubElement(Respuesta, "fecha").text = str(i.fecha)
+        Mensajes = ET.SubElement(Respuesta,"mensajes")
+        ET.SubElement(Mensajes,"total").text = str(i.total)
+        ET.SubElement(Mensajes,"positivos").text = str(i.t_positivo)
+        ET.SubElement(Mensajes,"negativos").text = str(i.t_negativo)
+        ET.SubElement(Mensajes,"neutro").text = str(i.t_neutro)
+        Analisis = ET.SubElement(Respuesta,"analisis")
+        for j in range(len(cantidad_empresa)):
+            if str(i.fecha) == str(cantidad_empresa[j].fecha):
+                ET.SubElement(Analisis,"empresa").attrib = {"nombre":cantidad_empresa[j].empresa}
+                Mensajes = ET.SubElement(Analisis,"mensajes")
+                ET.SubElement(Mensajes,"total").text = str(cantidad_empresa[j].total)
+                ET.SubElement(Mensajes,"positivos").text = str(cantidad_empresa[j].t_positivo)
+                ET.SubElement(Mensajes,"negativos").text = str(cantidad_empresa[j].t_negativo)
+                ET.SubElement(Mensajes,"neutro").text = str(cantidad_empresa[j].t_neutro)
+                Servicios = ET.SubElement(Analisis,"servicios")
+                for k in range(len(cantidad_servicio)):
+                    if str(i.fecha) == str(cantidad_servicio[k].fecha) and str(cantidad_empresa[j].empresa) == str(cantidad_servicio[k].empre):
+                        ET.SubElement(Servicios,"servicio").attrib = {"nombre":cantidad_servicio[k].servicio}
+                        Mensajes = ET.SubElement(Servicios,"mensajes")
+                        ET.SubElement(Mensajes,"total").text = str(cantidad_servicio[k].total)
+                        ET.SubElement(Mensajes,"positivos").text = str(cantidad_servicio[k].t_positivo)
+                        ET.SubElement(Mensajes,"negativos").text = str(cantidad_servicio[k].t_negativo)
+                        ET.SubElement(Mensajes,"neutro").text = str(cantidad_servicio[k].t_neutro)
+                    else:
+                        None
+
+    def Bonito(elemento, identificador='  '):
+        validar = [(0, elemento)]  
+
+        while validar:
+            level, elemento = validar.pop(0)
+            children = [(level + 1, child) for child in list(elemento)]
+            if children:
+                elemento.text = '\n' + identificador * (level+1)  
+            if validar:
+                elemento.tail = '\n' + identificador * validar[0][0]  
+            else:
+                elemento.tail = '\n' + identificador * (level-1)  
+            validar[0:0] = children 
+
+    Bonito(root)
+    archio = ET.ElementTree(root) 
+    archio.write("./respuesta.xml", encoding='UTF-8')
+    xml_str = ElementTree.tostring(root).decode()
+    return xml_str 
+from xml.etree import ElementTree    
+
+
 def elimina_tildes(cadena):
     s = ''.join((c for c in unicodedata.normalize('NFD',cadena) if unicodedata.category(c) != 'Mn'))
     return s
@@ -200,5 +291,4 @@ def Lecturafecha(fecha):
     except:
         return 'NoSeEncontro'
 
-LecturaDatos()
-data()
+LecturaMensaje()
