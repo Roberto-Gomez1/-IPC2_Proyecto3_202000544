@@ -176,9 +176,10 @@ def LecturaMensaje():
             elif sentimiento_positivo == sentimiento_negativo:
                 estado = "neutro"
         
-
-            mensaje_corto.append(corto(fecha,social,nombre,tipo_empresa,tipo_servicio,positivo,negativo,(sentimiento_positivo+'%'),(sentimiento_negativo+'%'),estado))
-            ob_fecha.append(fecha)
+            #print(sentimiento_positivo)
+            #print(sentimiento_negativo)
+            mensaje_corto.append(corto(fecha,social,nombre,tipo_empresa,tipo_servicio,positivo,negativo,str(sentimiento_positivo+'%'),str(sentimiento_negativo+'%'),estado))
+            #ob_fecha.append(fecha)
         print(repr(mensaje_corto))
     except:
         print("Error")
@@ -254,35 +255,35 @@ def ArchivoSalida2():
     mensaje = ET.SubElement(root,"mensaje")
     for i in mensaje_corto:
         ET.SubElement(mensaje, "fecha").text = str(i.fecha)
-        ET.SubElement(mensaje, "fecha").text = str(i.red_social)
-        ET.SubElement(mensaje, "fecha").text = str(i.usuario)
+        ET.SubElement(mensaje, "red_social").text = str(i.red_social)
+        ET.SubElement(mensaje, "usuario").text = str(i.usuario)
         empresaaa = ET.SubElement(mensaje,"empresas")
         ET.SubElement(empresaaa,"empresa").attrib = {"nombre":i.empresa}
         ET.SubElement(empresaaa,"servicio").text = str(i.servicio)
         ET.SubElement(root,"palabras_positivas").text = str(i.t_positivo)
         ET.SubElement(root,"palabras_negativas").text = str(i.t_negativo)
         ET.SubElement(root,"sentimiento_positivo").text = str(i.s_positivo)
-        ET.SubElement(root,"sentimiento_negativo").text = str(i.s_positivo)
+        ET.SubElement(root,"sentimiento_negativo").text = str(i.s_negativo)
         ET.SubElement(root,"sentimiento_analizado").text = str(i.s_analizado)
     def Bonito(elemento, identificador='  '):
-        validar = [(0, elemento)]  
+        validar = [(0, elemento)]
 
         while validar:
             level, elemento = validar.pop(0)
             children = [(level + 1, child) for child in list(elemento)]
             if children:
-                elemento.text = '\n' + identificador * (level+1)  
+                elemento.text = '\n' + identificador * (level+1)
             if validar:
-                elemento.tail = '\n' + identificador * validar[0][0]  
+                elemento.tail = '\n' + identificador * validar[0][0]
             else:
-                elemento.tail = '\n' + identificador * (level-1)  
+                elemento.tail = '\n' + identificador * (level-1)
             validar[0:0] = children 
 
     Bonito(root)
     archio = ET.ElementTree(root) 
     archio.write("./corto.xml", encoding='UTF-8')
     xml_str = ElementTree.tostring(root).decode()
-    return xml_str 
+    return xml_str
         
 def ArchivoSalida():
     global ob_men, cantidad_mensaje, cantidad_empresa, cantidad_servicio
