@@ -77,7 +77,7 @@
           
           <li class="nav-item dropdown">
             <a class="nav-link nav-icon">
-              <input id="nit" type="text">
+              <input id="empresa" type="text">
             </a>
           </li>
 
@@ -170,19 +170,38 @@
       let botonPDF = document.getElementById("botonPDF");
       let botonGrafo = document.getElementById("botonGrafica");
       let messages = document.getElementById("Exditor_Salida");
-
+      let cleaner = document.getElementById("Limpiar");
+      cleaner.addEventListener("click", (e) => {
+        e.preventDefault();
+        console.log("Exito")
+          
+          fetch("http://localhost:5000/Resumen_Fecha/eventsCleaner/", {
+            method: "GET",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+          })
+            .then((res) => {
+              if (res.ok) {
+                return res.text();
+              }
+            })
+            .then((res_txt) => {
+              alert("Limpiar data");
+            });
+        });
       botonGrafo.addEventListener("click", (e) => {
 
           e.preventDefault();
               let date = document.getElementById("date");
-              let nit = document.getElementById("nit");
+              let empresa = document.getElementById("empresa");
               let Data ={
-                  'nit': nit.value,
+                  'empresa': empresa.value,
                   'date': date.value,
                   
               }
               console.log(Data)
-              fetch('http://localhost:5000/resume_Iva_FechaGrafo/',{
+              fetch('http://localhost:5000/resume_FechaGrafo/',{
                   method: 'POST',
                   body:JSON.stringify(Data),
                   headers:{
@@ -201,14 +220,14 @@
 
           e.preventDefault();
               let date = document.getElementById("date");
-              let nit = document.getElementById("nit");
+              let empresa = document.getElementById("empresa");
               let Data ={
-                  'nit': nit.value,
+                  'empresa': empresa.value,
                   'date': date.value,
                   
               }
               console.log(Data)
-              fetch('http://localhost:5000/resume_Iva_FechaPDF/',{
+              fetch('http://localhost:5000/resume_FechaPDF/',{
                   method: 'POST',
                   body:JSON.stringify(Data),
                   headers:{
@@ -227,14 +246,14 @@
 
         e.preventDefault();
             let date = document.getElementById("date");
-            let nit = document.getElementById("nit");
+            let empresa = document.getElementById("empresa");
             let Data ={
-                'nit': nit.value,
+                'empresa': empresa.value,
                 'date': date.value,
                 
             }
             console.log(Data)
-            fetch('http://localhost:5000/resume_Iva_Fecha/',{
+            fetch('http://localhost:5000/resume_Fecha/',{
                 method: 'POST',
                 body:JSON.stringify(Data),
                 headers:{
