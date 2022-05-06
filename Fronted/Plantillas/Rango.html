@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="iso-8859-1">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>Components / Accordion - NiceAdmin Bootstrap Template</title>
@@ -57,7 +57,7 @@
  
 
     <div class="pagetitle">
-      <h1>Resumen de IVA por fecha y NIT</h1>
+      <h1>Resumen por fecha y empresa</h1>
 
     </div><!-- End Page Title -->
 
@@ -81,12 +81,11 @@
             </a>
           </li>
 
-        
-
-          <select name="selector" id="selector">
-            <option value="Total">Total</option>
-            <option value="SinIva">Sin Iva</option>
-          </select>
+          <li class="nav-item dropdown">
+            <a class="nav-link nav-icon">
+              <input id="empresa" type="text">
+            </a>
+          </li>
           
          
 
@@ -182,7 +181,26 @@
       let botonPDF = document.getElementById("botonPDF");
       let messages = document.getElementById("Exditor_Salida");
       let botonGrafo = document.getElementById("botonGrafica");
-      
+      let cleaner = document.getElementById("Limpiar");
+      cleaner.addEventListener("click", (e) => {
+        e.preventDefault();
+        console.log("Exito")
+          
+          fetch("http://localhost:5000/Rango/eventsCleaner/", {
+            method: "GET",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+          })
+            .then((res) => {
+              if (res.ok) {
+                return res.text();
+              }
+            })
+            .then((res_txt) => {
+              alert("Limpiar data");
+            });
+        });
 
 
       botonGrafo.addEventListener("click", (e) => {
@@ -190,15 +208,15 @@
           e.preventDefault();
               let dateS = document.getElementById("dateInicio");
               let dateF = document.getElementById("dateFin");
-              let option = document.getElementById("selector");
+              let empresa = document.getElementById("empresa");
               let Data ={
                   'dateInicio': dateS.value,
                   'dateFin': dateF.value,
-                  'Opcion': option.value,
+                  'empresa': empresa.value,
                   
               }
               console.log(Data)
-              fetch('http://localhost:5000/resume_rango_Iva_FechaGrafo/',{
+              fetch('http://localhost:5000/resume_rango_FechaGrafo/',{
                   method: 'POST',
                   body:JSON.stringify(Data),
                   headers:{
@@ -219,15 +237,15 @@
           e.preventDefault();
               let dateS = document.getElementById("dateInicio");
               let dateF = document.getElementById("dateFin");
-              let option = document.getElementById("selector");
+              let empresa = document.getElementById("empresa");
               let Data ={
                   'dateInicio': dateS.value,
                   'dateFin': dateF.value,
-                  'Opcion': option.value,
+                  'empresa': empresa.value,
                   
               }
               console.log(Data)
-              fetch('http://localhost:5000/resume_rango_Iva_FechaPDF/',{
+              fetch('http://localhost:5000/resume_rango_FechaPDF/',{
                   method: 'POST',
                   body:JSON.stringify(Data),
                   headers:{
@@ -248,15 +266,15 @@
         e.preventDefault();
             let dateS = document.getElementById("dateInicio");
             let dateF = document.getElementById("dateFin");
-            let option = document.getElementById("selector");
+            let empresa = document.getElementById("empresa");
             let Data ={
                 'dateInicio': dateS.value,
                 'dateFin': dateF.value,
-                'Opcion': option.value,
+                'empresa': empresa.value,
                 
             }
             console.log(Data)
-            fetch('http://localhost:5000/resume_rango_Iva_Fecha/',{
+            fetch('http://localhost:5000/resume_rango_Fecha/',{
                 method: 'POST',
                 body:JSON.stringify(Data),
                 headers:{

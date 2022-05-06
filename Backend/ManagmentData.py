@@ -1,7 +1,7 @@
 from flask import Flask, Response, request,jsonify
 from flask_cors import CORS
 from Lectura import LecturaDatos,ArchivoSalida,data,LecturaMensaje,ArchivoSalida2
-from Operaciones import limpiar,limpiar1,GenerarGrafo,genrarPDFechaEmpresa,ResumenEmpresafecha
+from Operaciones import limpiar,limpiar1,GenerarGrafo,genrarPDFechaEmpresa,ResumenEmpresafecha,genrarGRAFPRango,genrarPDFRango,ResumenPorRango
 import xml.etree.ElementTree as ET
 import json
 import pdfkit
@@ -13,7 +13,7 @@ cors = CORS(app, resources={r"/*": {"origin": "*"}})
 
 @app.route('/Resumen_Fecha/eventsCleaner/', methods=['GET'])
 def eventsCleaner3():
-    limpiar1()
+    #limpiar1()
     return Response(response='Limpiar')
 
 @app.route ("/resume_FechaGrafo/", methods=['POST'])
@@ -24,6 +24,7 @@ def resume_FechaGrafo():
     response =  "Se genero Grafo"
     respuesta = jsonify ({"error": False, "mensaje": response})
     return (respuesta)
+
 
 @app.route ("/resume_FechaPDF/", methods=['POST'])
 def resume_FechaPDF():
@@ -41,6 +42,54 @@ def resume_Fecha():
     response =  ResumenEmpresafecha(fecha,empresa)
     respuesta = jsonify ({"error": False, "mensaje": response})
     return (respuesta)
+
+@app.route('/Rango/eventsCleaner/', methods=['GET'])
+def eventsCleaner4():
+    #limpiar1()
+    return Response(response='Limpiar')
+
+
+@app.route ("/resume_rango_FechaGrafoPDF/", methods=['POST'])
+def resume_rango_FechaGrafoPDF():
+    pdfkit.from_file('ResumenRango.html', 'sample.pdf') 
+    path = 'ResumenRango.pdf'
+    webbrowser.open_new(path)
+
+    response =  "Se genero PDF del grafo"
+    respuesta = jsonify ({"error": False, "mensaje": response})
+    return (respuesta)
+
+@app.route ("/resume_rango_FechaGrafo/", methods=['POST'])
+def resume_rango_FechaGrafo():
+    fechaS = request.json['dateInicio']
+    fechaF = request.json['dateFin']
+    empresa = request.json['empresa'] 
+    genrarGRAFPRango(fechaS,fechaF,empresa)
+    response =  "Se genero Grafo"
+    respuesta = jsonify ({"error": False, "mensaje": response})
+    return (respuesta)
+
+@app.route ("/resume_rango_FechaPDF/", methods=['POST'])
+def resume_rango_FechaPDF():
+    fechaS = request.json['dateInicio']
+    fechaF = request.json['dateFin']
+    empresa = request.json['empresa'] 
+    genrarPDFRango(fechaS,fechaF,empresa)
+    response =  "Se genero PDF"
+    respuesta = jsonify ({"error": False, "mensaje": response})
+    return (respuesta)
+
+@app.route ("/resume_rango_Fecha/", methods=['POST'])
+def resume_rango_Fecha():
+    fechaS = request.json['dateInicio']
+    fechaF = request.json['dateFin']
+    empresa = request.json['empresa'] 
+    
+    response =  ResumenPorRango(fechaS,fechaF,empresa)
+
+    respuesta = jsonify ({"error": False, "mensaje": response})
+    return (respuesta)
+
 
 
 
@@ -93,13 +142,11 @@ def post_events1():
 
 @app.route('/shorty/eventsCleaner/', methods=['GET'])
 def eventsCleaner1():
-    print("prueba2")
     limpiar1()
     return Response(response='Limpiar')
 
 @app.route('/shorty/events/', methods=['GET'])
 def get_events2():
-    print("prueba3")
     dataa1 = ArchivoSalida2()
     return Response(response=dataa1)
 
