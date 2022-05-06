@@ -1,6 +1,6 @@
 from flask import Flask, Response, request,jsonify
 from flask_cors import CORS
-from Lectura import LecturaDatos,ArchivoSalida,data,LecturaMensaje,ArchivoSalida2
+from Lectura import LecturaDatos,ArchivoSalida,data,LecturaMensaje,ArchivoSalida2,GenrarSalidaPDF
 from Operaciones import limpiar,limpiar1,GenerarGrafo,genrarPDFechaEmpresa,ResumenEmpresafecha,genrarGRAFPRango,genrarPDFRango,ResumenPorRango
 import xml.etree.ElementTree as ET
 import json
@@ -119,15 +119,20 @@ def get_events():
     return Response(response=dataa)
 
     
-'''
+
 @app.route('/eventsPDF/', methods=['GET'])
 def get_eventsPDF():
     
     data = ArchivoSalida()
     GenrarSalidaPDF(data)
     return Response(response='Se genero PDF')   
-'''
 
+@app.route('/shorty/eventsPDF/', methods=['GET'])
+def get_eventsPDF1():
+    
+    data = ArchivoSalida2()
+    GenrarSalidaPDF(data)
+    return Response(response='Se genero PDF')   
 
 @app.route('/shorty/events/', methods=['POST'])
 def post_events1():

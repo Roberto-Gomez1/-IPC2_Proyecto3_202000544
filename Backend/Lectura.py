@@ -2,6 +2,8 @@ import xml.etree.ElementTree as ET
 import unicodedata
 import re
 from objetos import palabras_b,vicio,Men,fech,men_empr,men_servi,corto
+from tabla import tablas
+import webbrowser
 prueba = []
 empre = []
 ser =[]
@@ -336,8 +338,23 @@ def ArchivoSalida():
     archio.write("./respuesta.xml", encoding='UTF-8')
     xml_str = ElementTree.tostring(root).decode()
     return xml_str 
-from xml.etree import ElementTree    
+from xml.etree import ElementTree
 
+def GenrarSalidaPDF(data):
+    global Ob_Autorizaciones
+    dataNew = data.split("\n")
+    
+    arreglo = []
+    
+    for i in dataNew:
+        temp = []
+        temp.append(i)
+        #print(temp)
+        arreglo.append(temp)
+    
+    tablas(arreglo,'ResumenPorRangos.pdf')
+    path = 'ResumenPorRangos.pdf'
+    webbrowser.open_new(path)
 
 def elimina_tildes(cadena):
     s = ''.join((c for c in unicodedata.normalize('NFD',cadena) if unicodedata.category(c) != 'Mn'))
